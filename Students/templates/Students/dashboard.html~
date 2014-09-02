@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Dashboard</title>
+<meta charset="utf-8">
+
+</head>
+
+<body>
+
+<h2> Dashboard </h2>
+
+<h2> <a href="performance-tracker"> Performance Tracker </a> </h2>
+
+<h2> <a href="cohort"> Cohort Analysis </a> </h2>
+
+<h3> Institute Rank: {{ insti_rank }} </h3>
+
+<h3> Latest Overall Score: {{ overall_score }} </h3>
+
+<h4> Latest Physics Score: {{ physics_score }} </h4>
+
+<h4> Latest Chemistry Score: {{ chemistry_score }} </h4>
+
+<h4> Latest Mathematics Score: {{ math_score }} </h4>
+
+<div id='detailed_perf_chart' style="width:900px; height: 500px;" ></div>
+
+<div id='phy_lod_chart' style="width:900px; height: 250px;" ></div>
+
+<div id='chem_lod_chart' style="width:900px; height: 250px;" ></div>
+
+<div id='math_lod_chart' style="width:900px; height: 250px;" ></div>
+
+<div id='phy_toq_chart' style="width:900px; height: 250px;" ></div>
+
+<div id='chem_toq_chart' style="width:900px; height: 250px;" ></div>
+
+<div id='math_toq_chart' style="width:900px; height: 250px;" ></div>
+
+
+<h4> <a href="logout_action"> Logout </a></h4>
+
+
+
+</body>
+
+
+<script type='text/javascript' src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+<script type='text/javascript'>
+google.setOnLoadCallback(drawTable);
+function drawTable() {
+	var tests_performance = {{ tests_performance|safe }};
+
+	var tests_perf_list = [['Date','Rank']];
+	for (var i = 0, len = tests_performance.length; i < len; ++i) {
+     		var test_data = tests_performance[i];
+		tests_perf_list.push([test_data.test_date, test_data.insti_rank]);
+     		
+ 	}
+
+	//	console.log(chapters_perf_list);
+
+	var data = google.visualization.arrayToDataTable(tests_perf_list);
+	var options = {
+    		title: 'Rank Wise Performance',
+    		hAxis: {title: 'Date', titleTextStyle: {color: 'red'} },
+		vAxis: {format: '0',direction:-1}
+  	};
+
+	var chart = new google.visualization.LineChart(document.getElementById('detailed_perf_chart'));
+	chart.draw(data, options);
+
+	//physics lod performance
+
+	var phy_lod_data = {{ phy_lod_data|safe }};
+	var phy_lod_list = [["Level of Difficulty","Total Questions","Attempted Questions","Correct Answers"]];
+	for (var i = 0, len = phy_lod_data.length; i < len; ++i) {
+     		var lod_data = phy_lod_data[i];
+		phy_lod_list.push([lod_data.type, lod_data.total, lod_data.attempted, lod_data.correct]);
+     		
+ 	}
+	var phyLodChartData = google.visualization.arrayToDataTable(phy_lod_list);
+	var phyLodChartOptions = {
+    		title: 'Physics Performance by Level of Difficulty',
+    		vAxis: {format: '0'}
+  	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById('phy_lod_chart'));
+	chart.draw(phyLodChartData, phyLodChartOptions);
+
+	//chem lod performance
+
+	var chem_lod_data = {{ chem_lod_data|safe }};
+	var chem_lod_list = [["Level of Difficulty","Total Questions","Attempted Questions","Correct Answers"]];
+	for (var i = 0, len = chem_lod_data.length; i < len; ++i) {
+     		var lod_data = chem_lod_data[i];
+		chem_lod_list.push([lod_data.type, lod_data.total, lod_data.attempted, lod_data.correct]);
+     		
+ 	}
+	var chemLodChartData = google.visualization.arrayToDataTable(chem_lod_list);
+	var chemLodChartOptions = {
+    		title: 'Chemistry Performance by Level of Difficulty',
+    		vAxis: {format: '0'}
+  	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById('chem_lod_chart'));
+	chart.draw(chemLodChartData, chemLodChartOptions);
+
+	//math lod performance
+
+	var math_lod_data = {{ math_lod_data|safe }};
+	var math_lod_list = [["Level of Difficulty","Total Questions","Attempted Questions","Correct Answers"]];
+	for (var i = 0, len = math_lod_data.length; i < len; ++i) {
+     		var lod_data = math_lod_data[i];
+		math_lod_list.push([lod_data.type, lod_data.total, lod_data.attempted, lod_data.correct]);
+     		
+ 	}
+	var mathLodChartData = google.visualization.arrayToDataTable(math_lod_list);
+	var mathLodChartOptions = {
+    		title: 'Mathematics Performance by Level of Difficulty',
+    		vAxis: {format: '0'}
+  	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById('math_lod_chart'));
+	chart.draw(mathLodChartData, mathLodChartOptions);
+
+	//physics toq performance
+
+	var phy_toq_data = {{ phy_toq_data|safe }};
+	var phy_toq_list = [["Type of Question","Total Questions","Attempted Questions","Correct Answers"]];
+	for (var i = 0, len = phy_toq_data.length; i < len; ++i) {
+     		var toq_data = phy_toq_data[i];
+		phy_toq_list.push([toq_data.type, toq_data.total, toq_data.attempted, toq_data.correct]);
+     		
+ 	}
+	var phyToqChartData = google.visualization.arrayToDataTable(phy_toq_list);
+	var phyToqChartOptions = {
+    		title: 'Physics Performance by Type of Question (TOQ)',
+    		vAxis: {format: '0'}
+  	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById('phy_toq_chart'));
+	chart.draw(phyToqChartData, phyToqChartOptions);
+
+	//chem toq performance
+
+	var chem_toq_data = {{ chem_toq_data|safe }};
+	var chem_toq_list = [["Type of Question","Total Questions","Attempted Questions","Correct Answers"]];
+	for (var i = 0, len = chem_toq_data.length; i < len; ++i) {
+     		var toq_data1 = chem_toq_data[i];
+		chem_toq_list.push([toq_data1.type, toq_data1.total, toq_data1.attempted, toq_data1.correct]);
+     		
+ 	}
+	var chemToqChartData = google.visualization.arrayToDataTable(chem_toq_list);
+	var chemToqChartOptions = {
+    		title: 'Chemistry Performance by Type of Question (TOQ)',
+    		vAxis: {format: '0'}
+  	};
+
+	var chart = new google.visualization.ColumnChart(document.getElementById('chem_toq_chart'));
+	chart.draw(chemToqChartData, chemToqChartOptions);
+
+	//math toq performance
+
+	var math_toq_data = {{ math_toq_data|safe }};
+	var math_toq_list = [["Type of Question","Total Questions","Attempted Questions","Correct Answers"]];
+	for (var i = 0, len = math_toq_data.length; i < len; ++i) {
+     		var toq_data = math_toq_data[i];
+		math_toq_list.push([toq_data.type, toq_data.total, toq_data.attempted, toq_data.correct]);
+     		
+ 	}
+	var mathToqChartData = google.visualization.arrayToDataTable(math_toq_list);
+	var mathToqChartOptions = {
+    		title: 'Mathematics Performance by Type of Question (TOQ)',
+    		vAxis: {format: '0'}
+  	};
+	console.log(math_toq_list);
+	console.log(phy_toq_list);
+
+	var chart = new google.visualization.ColumnChart(document.getElementById('math_toq_chart'));
+	chart.draw(mathToqChartData, mathToqChartOptions);
+}
+</script>
+	
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Performance Tracker</title>
+<meta charset="utf-8">
+
+<script type='text/javascript' src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+    <script type='text/javascript'>
+      google.setOnLoadCallback(drawTable);
+      function drawTable() {
+        
+	var data2 = new google.visualization.DataTable();
+	data2.addColumn('string', 'Test Name');
+	data2.addColumn('string', 'Test Date');
+	data2.addColumn('number', 'Institute Rank');
+	data2.addColumn('number', 'Physics Score');
+	data2.addColumn('number', 'Chemistry Score');
+	data2.addColumn('number', 'Mathematics Score');
+	data2.addColumn('number', 'Overall Score');
+	
+	var detailed_responses = {{ tests_performance|safe }};
+	for (var i = 0, len = detailed_responses.length; i < len; ++i) {
+     		var response = detailed_responses[i];
+     		data2.addRows([
+          ['<a href="/students/testdetail/' + response.test_id + '">' + response.test_name + '</a>', response.test_date, response.insti_rank, response.physics_score, response.chemistry_score, response.math_score, response.overall_score ]
+          
+        ]);
+ 	}
+
+	
+	var table2 = new google.visualization.Table(document.getElementById('table_div'));
+        table2.draw(data2, {showRowNumber: true, allowHtml: true});
+
+	
+	
+	
+      }
+      
+    </script>
+
+</head>
+
+<body>
+
+<h2> Performance Tracker </h2>
+
+<div id='table_div'> </div> 
+
+<br> <br>
+
+<ul>
+{% for  key,values in chapters_list.items %}
+	
+	<li> {{ key }} </li>
+	<ul>
+		{% for v in values %}
+        	<li>{{v}}</li>
+        	{% endfor %}
+	</ul>
+			
+{% endfor %}
+</ul>
+
+
+<h4> <a href="/students/logout_action"> Logout </a></h4>
+
+
+
+</body>
+
+</html>

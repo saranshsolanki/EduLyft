@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Test Creator</title>
+<meta charset="utf-8">
+</head>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+</script> <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+<script>
+
+$(function(){
+ $(".subject_class").each(function(){
+  $(this).autocomplete({
+	source: "get_subjects/",
+	minLength: 2,
+  });
+ });
+});
+
+$(function() {
+  $(".chapter_class").each(function(index){
+    $(this).autocomplete({
+	source: function(request, response) {
+            $.ajax({
+                url: "get_chapters/",
+                dataType: "json",
+                data: {
+                    term: request.term,
+                    subject: $("#id_form-" + index.toString() + "-subject").val(), 
+		    //subject: i.toString(),
+                },
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
+	minLength: 2,
+	
+    });
+ });
+});
+</script>
+
+<body>
+
+<h2> Test Name: {{ saved_test_name }} </h2>
+<h3> Test Id: {{ saved_test_id }} </h3>
+
+<h4> Questions: </h4>
+<form action="" method="post">
+{% csrf_token %}
+{{ formset.management_form }}
+    <table>
+        {% for form in formset.forms %}
+        <tr>
+    	{% for field in form.visible_fields %}
+       	<td>
+         {{ field.errors }}
+         {{ field.label_tag }} {{ field }}
+       	</td>
+    	{% endfor %}
+    	</tr>
+        {% endfor %}
+    </table>
+<input type="submit" value="Submit" />
+</form>
+
+
+
+</body>
+
+</html>

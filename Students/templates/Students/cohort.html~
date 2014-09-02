@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Cohort Analysis</title>
+<meta charset="utf-8">
+
+</head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+</script> <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+
+<body>
+
+<h2> Cohort Analysis </h2>
+
+Start Date: <input id="id_start_date" name="start_date" type="date" />
+End Date: <input id="id_end_date" name="end_date" type="date" />
+
+<br> <br>
+
+Metric:  
+<select id="id_metric_select">
+  <option value=1>Institute Rank</option>
+  <option value=2>Campus Rank</option>
+  <option value=3>Score</option>
+  <option value=4>Institute Average Offset</option>
+  <option value=5>Campus Average Offset</option>
+</select>
+
+<input id="id_add_filter" type="submit" value="Add Filter" /> 
+<br> <br>
+
+<select id="id_filter"> </select>
+
+<br>
+
+<input id="id_show" type="submit" value="Show" /> 
+
+<div id="id_text"> </div>
+
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+
+<h4> <a href="logout_action"> Logout </a></h4>
+
+
+</body>
+
+<script type='text/javascript' src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'></script>
+
+<script type="text/javascript">
+
+function drawCohort(){
+	var metric_val = $('#id_metric_select').val();
+	var title = $('#id_metric_select').find(":selected").text();
+	var title_str = String(title);
+	$.ajax({
+	    // Assuming an endpoint here that responds to GETs with a date.
+	    url: 'get_cohort/',
+	    data: {
+                    start_date: $("#id_start_date").val(),
+                    end_date: $("#id_end_date").val(), 
+		    
+                },
+	    contentType: "application/json",
+	    dataType: 'json',
+	    	   
+	}).done(function(response){
+			var json_obj = $.parseJSON(JSON.stringify(response));
+			var div = document.getElementById('id_text');
+			
+			var performance_array = [['Date',title]];
+		
+	        	for (var i in json_obj) 
+            		{
+                		//div.innerHTML = div.innerHTML + json_obj[i].names + " " + json_obj[i].rank + " " + json_obj[i].date;
+				if(metric_val == 1){
+					performance_array.push([json_obj[i].date, json_obj[i].insti_rank]);
+					axis_direction = -1;
+				}else if(metric_val == 3){
+					performance_array.push([json_obj[i].date, json_obj[i].overall_score]);
+					axis_direction = 1;
+				}
+				
+					
+            		}
+			var options = {
+          			title: title,
+				vAxis: {direction: axis_direction},
+        		};
+
+			var performanceData = google.visualization.arrayToDataTable(performance_array);
+			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+			chart.draw(performanceData, options);
+		});
+}
+
+function showFilterInterface(){
+	var filterArray = ["Subject","Chapter","Performance"];
+	select = document.getElementById('id_filter');
+	for (var i = 0; i<=2; i++){
+	    	var opt = document.createElement('option');
+	    	opt.value = i + 1;
+	    	opt.innerHTML = filterArray[i];
+	    	select.appendChild(opt);
+	}
+}
+
+$(function(){
+	$('#id_show').click(drawCohort);
+	  
+	
+});
+
+$(function(){
+	$('#id_add_filter').click(showFilterInterface);
+	  
+	
+});
+
+
+</script>
+
+</html>
+
+

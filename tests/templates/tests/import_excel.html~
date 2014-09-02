@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title> Test Upload Marks</title>
+<meta charset="utf-8">
+</head>
+
+<body>
+
+<h2> Import Excel </h2>
+
+<form enctype="multipart/form-data" action="" method="post">
+{% csrf_token %}
+<table>
+{{form}}
+</table>
+<input type="submit" value="Submit" />
+</form>
+
+{{ rows }}
+</body>
+
+</html>

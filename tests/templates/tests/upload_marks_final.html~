@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title> Upload Marks</title>
+<meta charset="utf-8">
+</head>
+
+<body>
+
+<h2> Upload Marks Final </h2>
+
+<h4> Questions: </h4>
+<form action="" method="post">
+{% csrf_token %}
+{{ formset.management_form }}
+    <table>
+        {% for form in formset.forms %}
+        <tr>
+    	{% for field in form %}
+       <td>
+         {{ field.errors }}
+         {{ field.label_tag }} {{ field }}
+       </td>
+    {% endfor %}
+    </tr>
+        {% endfor %}
+    </table>
+<input type="submit" value="Submit" />
+</form>
+</body>
+
+</html>
