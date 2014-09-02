@@ -16,8 +16,6 @@ pyOpenSSL==0.13
 pycrypto==2.6
 pycups==1.9.62
 pycurl==7.19.0
-python-apt==0.8.8ubuntu6
-python-debian==0.1.21-nmu2ubuntu1
 requests==2.1.0
 requests-oauthlib==0.4.0
 static3==0.5.1
