@@ -1,5 +1,4 @@
 Django==1.6.5
-Kivy==1.7.2
 Mako==0.7.3
 Markdown==2.2.1
 MarkupSafe==0.15
