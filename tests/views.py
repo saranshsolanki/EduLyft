@@ -73,6 +73,9 @@ def create(request):
                 questions.correct_score = form.cleaned_data['correct_score']
                 questions.wrong_score = form.cleaned_data['wrong_score']
                 questions.save()
+                
+                test_instance.is_answers_filled = True
+                test_instance.save()
             
                 
             return HttpResponse("Test has been created.")
@@ -369,7 +372,7 @@ def get_score(question, attempt_ans):
 def get_all_tests(request):
     if request.is_ajax() or request.method == "GET":
         q = request.GET.get('term', '')
-        tests = Tests.objects.filter(name__icontains = q)[:10]
+        tests = Tests.objects.filter(name__icontains = q, is_answers_filled__exact = True)[:10]
         #print tests
         results = []
         for test in tests:

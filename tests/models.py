@@ -28,6 +28,7 @@ class Tests(models.Model):
     instructions = models.TextField(blank = True)
     test_date = models.DateField(auto_now=False, auto_now_add=False)
     no_of_questions = models.IntegerField(max_length = 5)
+    is_answers_filled = models.BooleanField(default=False)
     
     def __unicode__(self): # Python 3: def __str__(self):
         return self.name
@@ -38,7 +39,7 @@ class DateInput(forms.DateInput):
 class TestsForm(ModelForm):
     class Meta:
         model = Tests
-        fields = '__all__'
+        exclude = ('is_answers_filled',)
         widgets = {
             'test_date': DateInput()
         }
