@@ -94,7 +94,7 @@ ALLOWED_HOSTS = ['*']
 
 import dj_database_url
 
-DATABASES = { 'default' : dj_database_url.config()}
+DATABASES = { 'default' : dj_database_url.config(default=os.getenv('DATABASE_URL'))}
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
