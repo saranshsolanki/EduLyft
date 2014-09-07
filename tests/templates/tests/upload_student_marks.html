@@ -17,7 +17,20 @@ $(function() {
 <script>
 $(function() {
   $("#id_studentname").autocomplete({
-    source: "get_students/",
+    source: function(request, response) {
+            $.ajax({
+                url: "get_students/",
+                dataType: "json",
+                data: {
+                    term: request.term,
+                    test: $("#id_testname").val(), 
+		    //subject: i.toString(),
+                },
+                success: function(data) {
+                    response(data);
+                }
+            });
+        },
     minLength: 2,
   });
 });
